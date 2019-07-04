@@ -1,0 +1,131 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ADDRESS_MAP	../exoedge_modbus_tcp/__init__.py	/^    ADDRESS_MAP = {$/;"	kind:variable	line:24
+BinaryPayloadBuilder	../exoedge_modbus_tcp/lib.py	/^from pymodbus.payload import BinaryPayloadBuilder$/;"	kind:namespace	line:5
+BinaryPayloadDecoder	../exoedge_modbus_tcp/lib.py	/^from pymodbus.payload import BinaryPayloadDecoder$/;"	kind:namespace	line:4
+ConfigIO	../test/test_read_write_coils.py	/^from exoedge.config_io import ConfigIO$/;"	kind:namespace	line:9
+DESTINATION	../exoedge_modbus_tcp/__init__.py	/^    DESTINATION = "Murano"$/;"	kind:variable	line:42
+Endian	../exoedge_modbus_tcp/__init__.py	/^from pymodbus.constants import Endian$/;"	kind:namespace	line:13
+Endian	../exoedge_modbus_tcp/cli.py	/^from pymodbus.constants import Endian$/;"	kind:namespace	line:50
+Endian	../exoedge_modbus_tcp/lib.py	/^from pymodbus.constants import Endian$/;"	kind:namespace	line:6
+ExoEdgeSource	../exoedge_modbus_tcp/__init__.py	/^from exoedge.sources import ExoEdgeSource$/;"	kind:namespace	line:10
+ExositeModbusTCP	../exoedge_modbus_tcp/__init__.py	/^from exoedge_modbus_tcp.lib import ExositeModbusTCP$/;"	kind:namespace	line:9
+ExositeModbusTCP	../exoedge_modbus_tcp/cli.py	/^from exoedge_modbus_tcp.lib import ExositeModbusTCP$/;"	kind:namespace	line:49
+ExositeModbusTCP	../exoedge_modbus_tcp/lib.py	/^class ExositeModbusTCP(object):$/;"	kind:class	line:79
+ExositeModbusTCP	../test/test_read_write_coils.py	/^from exoedge_modbus_tcp import ModbusTCPExoEdgeSource, ExositeModbusTCP$/;"	kind:namespace	line:10
+FORMAT	../test/synchronous_server.py	/^FORMAT = ('%(asctime)-15s %(threadName)-15s'$/;"	kind:variable	line:23
+LOG	../exoedge_modbus_tcp/__init__.py	/^LOG = logger.getLogger('exoedge.'+__name__)$/;"	kind:variable	line:15
+LOG	../exoedge_modbus_tcp/cli.py	/^LOG = logging.getLogger('exoedge.exomod')$/;"	kind:variable	line:53
+LOG	../exoedge_modbus_tcp/lib.py	/^LOG = logger.getLogger('exoedge.'+__name__)$/;"	kind:variable	line:10
+MODBUS_SERVER	../test/test_read_write_coils.py	/^from test.synchronous_server import TestModbusTCPServer #, MODBUS_SERVER$/;"	kind:namespace	line:8
+ModbusDeviceIdentification	../test/synchronous_server.py	/^from pymodbus.device import ModbusDeviceIdentification$/;"	kind:namespace	line:19
+ModbusException	../exoedge_modbus_tcp/__init__.py	/^from pymodbus.exceptions import ModbusException$/;"	kind:namespace	line:12
+ModbusException	../exoedge_modbus_tcp/lib.py	/^from pymodbus.exceptions import ModbusException$/;"	kind:namespace	line:7
+ModbusSequentialDataBlock	../test/synchronous_server.py	/^from pymodbus.datastore import ModbusSequentialDataBlock, ModbusSparseDataBlock$/;"	kind:namespace	line:20
+ModbusServerContext	../test/synchronous_server.py	/^from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext$/;"	kind:namespace	line:21
+ModbusSlaveContext	../test/synchronous_server.py	/^from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext$/;"	kind:namespace	line:21
+ModbusSparseDataBlock	../test/synchronous_server.py	/^from pymodbus.datastore import ModbusSequentialDataBlock, ModbusSparseDataBlock$/;"	kind:namespace	line:20
+ModbusTCPExoEdgeSource	../exoedge_modbus_tcp/__init__.py	/^class ModbusTCPExoEdgeSource(ExoEdgeSource):$/;"	kind:class	line:22
+ModbusTCPExoEdgeSource	../test/test_read_write_coils.py	/^from exoedge_modbus_tcp import ModbusTCPExoEdgeSource, ExositeModbusTCP$/;"	kind:namespace	line:10
+ModbusTCPExoEdgeSourceException	../exoedge_modbus_tcp/__init__.py	/^class ModbusTCPExoEdgeSourceException(Exception):$/;"	kind:class	line:19
+ModbusTcpClient	../exoedge_modbus_tcp/lib.py	/^from pymodbus.client.sync import ModbusTcpClient$/;"	kind:namespace	line:3
+ModbusTcpClient	../test/modbus_tcp_client.py	/^from pymodbus.client.sync import ModbusTcpClient$/;"	kind:namespace	line:1
+ModbusTcpServer	../test/synchronous_server.py	/^from pymodbus.server.sync import StartTcpServer, ModbusTcpServer$/;"	kind:namespace	line:17
+NUMBER_OF_REGS_AND_COILS	../test/synchronous_server.py	/^NUMBER_OF_REGS_AND_COILS = 100$/;"	kind:variable	line:29
+RANGES	../exoedge_modbus_tcp/lib.py	/^RANGES = {$/;"	kind:variable	line:24
+README	../setup.py	/^    README = 'README Not Found'$/;"	kind:variable	line:15
+StartTcpServer	../test/synchronous_server.py	/^from pymodbus.server.sync import StartTcpServer, ModbusTcpServer$/;"	kind:namespace	line:17
+SuiteA	../test/test_app_specific_config.py	/^class SuiteA(unittest.TestCase):$/;"	kind:class	line:9
+TestModbusTCPServer	../test/synchronous_server.py	/^class TestModbusTCPServer(threading.Thread):$/;"	kind:class	line:32
+TestModbusTCPServer	../test/test_read_write_coils.py	/^from test.synchronous_server import TestModbusTCPServer #, MODBUS_SERVER$/;"	kind:namespace	line:8
+TestReadWriteCoils	../test/test_read_write_coils.py	/^class TestReadWriteCoils(unittest.TestCase):$/;"	kind:class	line:13
+__init__	../exoedge_modbus_tcp/lib.py	/^    def __init__(self, **kwargs):$/;"	kind:member	line:80
+__init__	../test/synchronous_server.py	/^    def __init__(self, *args, **kwargs):$/;"	kind:member	line:33
+__init__.py	../exoedge_modbus_tcp/__init__.py	1;"	kind:file	line:1
+__init__.py	../test/__init__.py	1;"	kind:file	line:1
+address	../test/modbus_tcp_client.py	/^address = 0$/;"	kind:variable	line:4
+author	../setup.py	/^    author="Exosite LLC",$/;"	kind:variable	line:20
+author_email	../setup.py	/^    author_email="support@exosite.com",$/;"	kind:variable	line:21
+classifiers	../setup.py	/^    classifiers=[$/;"	kind:variable	line:34
+cli.py	../exoedge_modbus_tcp/cli.py	1;"	kind:file	line:1
+description	../setup.py	/^    description="An ExoEdge source for interfacing with Modbus TCP devices.",$/;"	kind:variable	line:22
+docopt	../exoedge_modbus_tcp/cli.py	/^from docopt import docopt$/;"	kind:namespace	line:48
+entry_points	../setup.py	/^    entry_points={$/;"	kind:variable	line:27
+errno	../test/test_read_write_coils.py	/^import errno$/;"	kind:namespace	line:3
+eval_signed	../exoedge_modbus_tcp/lib.py	/^        def eval_signed(decoder, count):$/;"	kind:function	line:236
+eval_unsigned	../exoedge_modbus_tcp/lib.py	/^        def eval_unsigned(decoder, count):$/;"	kind:function	line:253
+evaluate_coils	../exoedge_modbus_tcp/lib.py	/^    def evaluate_coils(cls, **kwargs):$/;"	kind:member	line:158
+evaluate_registers	../exoedge_modbus_tcp/lib.py	/^    def evaluate_registers(cls, **kwargs):$/;"	kind:member	line:220
+find_packages	../setup.py	/^from setuptools import setup, find_packages$/;"	kind:namespace	line:4
+get_builder_method	../exoedge_modbus_tcp/lib.py	/^    def get_builder_method(cls, mode, count):$/;"	kind:member	line:86
+get_decoder_method	../exoedge_modbus_tcp/lib.py	/^    def get_decoder_method(cls, mode, count):$/;"	kind:member	line:122
+install_requires	../setup.py	/^    install_requires=REQUIREMENTS,$/;"	kind:variable	line:32
+json	../test/test_app_specific_config.py	/^import json$/;"	kind:namespace	line:4
+json	../test/test_read_write_coils.py	/^import json$/;"	kind:namespace	line:7
+keywords	../setup.py	/^    keywords="murano exosite iot iiot client gateway modbus tcp",$/;"	kind:variable	line:24
+lib.py	../exoedge_modbus_tcp/lib.py	1;"	kind:file	line:1
+license	../setup.py	/^    license="Apache 2.0",$/;"	kind:variable	line:23
+log	../test/synchronous_server.py	/^log = logging.getLogger()$/;"	kind:variable	line:26
+logger	../exoedge_modbus_tcp/__init__.py	/^from exoedge import logger$/;"	kind:namespace	line:11
+logger	../exoedge_modbus_tcp/lib.py	/^from exoedge import logger$/;"	kind:namespace	line:2
+logging	../exoedge_modbus_tcp/__init__.py	/^import logging$/;"	kind:namespace	line:7
+logging	../exoedge_modbus_tcp/cli.py	/^import logging$/;"	kind:namespace	line:47
+logging	../test/synchronous_server.py	/^import logging$/;"	kind:namespace	line:16
+long_description	../setup.py	/^    long_description=README,$/;"	kind:variable	line:33
+main	../exoedge_modbus_tcp/cli.py	/^def main():$/;"	kind:function	line:56
+main	../test/test_app_specific_config.py	/^def main():$/;"	kind:function	line:31
+main	../test/test_read_write_coils.py	/^def main():$/;"	kind:function	line:55
+modbus	../test/modbus_tcp_client.py	/^modbus = ModbusTcpClient('localhost', port=5020)$/;"	kind:variable	line:3
+modbus_tcp_client.py	../test/modbus_tcp_client.py	1;"	kind:file	line:1
+name	../setup.py	/^    name="exoedge_modbus_tcp",$/;"	kind:variable	line:18
+os	../setup.py	/^import os$/;"	kind:namespace	line:3
+os	../test/test_app_specific_config.py	/^import os$/;"	kind:namespace	line:2
+os	../test/test_read_write_coils.py	/^import os$/;"	kind:namespace	line:2
+packages	../setup.py	/^    packages=find_packages(),$/;"	kind:variable	line:26
+print_function	../exoedge_modbus_tcp/cli.py	/^from __future__ import print_function$/;"	kind:namespace	line:46
+read	../setup.py	/^def read(fname):$/;"	kind:function	line:8
+read_coils	../exoedge_modbus_tcp/lib.py	/^    def read_coils(self, address, count, eval_kwargs, no_decode=False):$/;"	kind:member	line:299
+read_discrete_input	../exoedge_modbus_tcp/test.py	/^def read_discrete_input(**kwargs):$/;"	kind:function	line:1
+read_discrete_inputs	../exoedge_modbus_tcp/lib.py	/^    def read_discrete_inputs(self, address, count, eval_kwargs, no_decode=False):$/;"	kind:member	line:310
+read_holding_registers	../exoedge_modbus_tcp/lib.py	/^    def read_holding_registers(self, address, count, eval_kwargs, no_decode=False):$/;"	kind:member	line:330
+read_input_registers	../exoedge_modbus_tcp/lib.py	/^    def read_input_registers(self, address, count, eval_kwargs, no_decode=False):$/;"	kind:member	line:321
+response	../test/modbus_tcp_client.py	/^    response = modbus.read_holding_registers(address, 10)$/;"	kind:variable	line:7
+run	../exoedge_modbus_tcp/__init__.py	/^    def run(self):$/;"	kind:member	line:44
+run	../test/synchronous_server.py	/^    def run(self):$/;"	kind:member	line:37
+server	../test/synchronous_server.py	/^    server = TestModbusTCPServer()$/;"	kind:variable	line:65
+setUp	../test/test_app_specific_config.py	/^    def setUp(self):$/;"	kind:member	line:17
+setUp	../test/test_read_write_coils.py	/^    def setUp(self):$/;"	kind:member	line:33
+setUpClass	../test/test_app_specific_config.py	/^    def setUpClass(cls):$/;"	kind:member	line:11
+setUpClass	../test/test_read_write_coils.py	/^    def setUpClass(cls):$/;"	kind:member	line:15
+setup	../setup.py	/^from setuptools import setup, find_packages$/;"	kind:namespace	line:4
+setup.py	../setup.py	1;"	kind:file	line:1
+synchronous_server.py	../test/synchronous_server.py	1;"	kind:file	line:1
+sys	../exoedge_modbus_tcp/__init__.py	/^import sys$/;"	kind:namespace	line:5
+tearDown	../test/test_app_specific_config.py	/^    def tearDown(self):$/;"	kind:member	line:19
+tearDown	../test/test_read_write_coils.py	/^    def tearDown(self):$/;"	kind:member	line:37
+tearDownClass	../test/test_app_specific_config.py	/^    def tearDownClass(cls):$/;"	kind:member	line:15
+tearDownClass	../test/test_read_write_coils.py	/^    def tearDownClass(cls):$/;"	kind:member	line:30
+test.py	../exoedge_modbus_tcp/test.py	1;"	kind:file	line:1
+test_001_holding_coil	../test/test_read_write_coils.py	/^    def test_001_holding_coil(self):$/;"	kind:member	line:40
+test_app_specific_config.py	../test/test_app_specific_config.py	1;"	kind:file	line:1
+test_dir	../test/test_app_specific_config.py	/^test_dir = os.path.dirname(os.path.abspath(__file__))$/;"	kind:variable	line:7
+test_poll_coil_1	../test/test_app_specific_config.py	/^    def test_poll_coil_1(self):$/;"	kind:member	line:22
+test_read_write_coils.py	../test/test_read_write_coils.py	1;"	kind:file	line:1
+threading	../exoedge_modbus_tcp/__init__.py	/^import threading$/;"	kind:namespace	line:8
+threading	../test/synchronous_server.py	/^import threading$/;"	kind:namespace	line:15
+threading	../test/test_read_write_coils.py	/^import threading$/;"	kind:namespace	line:6
+time	../exoedge_modbus_tcp/__init__.py	/^import time$/;"	kind:namespace	line:6
+time	../test/modbus_tcp_client.py	/^import time$/;"	kind:namespace	line:2
+time	../test/test_read_write_coils.py	/^import time$/;"	kind:namespace	line:4
+unittest	../test/test_app_specific_config.py	/^import unittest$/;"	kind:namespace	line:3
+unittest	../test/test_read_write_coils.py	/^import unittest$/;"	kind:namespace	line:5
+url	../setup.py	/^    url="https:\/\/github.com\/exosite\/lib_exoedge_modbus_tcp_python",$/;"	kind:variable	line:25
+version	../setup.py	/^    version="18.07.31",$/;"	kind:variable	line:19
+write_coil	../exoedge_modbus_tcp/lib.py	/^    def write_coil(self, address, value):$/;"	kind:member	line:339
+write_coils	../exoedge_modbus_tcp/lib.py	/^    def write_coils(self, address, values):$/;"	kind:member	line:342
+write_register	../exoedge_modbus_tcp/lib.py	/^    def write_register(self, address, value, eval_mode, byteorder, wordorder):$/;"	kind:member	line:348
+write_registers	../exoedge_modbus_tcp/lib.py	/^    def write_registers(self, address, count, value, eval_mode, byteorder, wordorder):$/;"	kind:member	line:364

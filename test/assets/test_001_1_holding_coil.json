@@ -1,0 +1,33 @@
+{
+  "channels": {
+    "1": {
+      "display_name": "Holding Coil 1",
+      "description": "One-second intervals of reading holding coil 1.",
+      "properties": {
+        "max": null,
+        "precision": null,
+        "data_type": "BINARY",
+        "min": null
+      },
+      "protocol_config": {
+        "application": "Modbus_TCP",
+        "interface": "/sys/class/net/eth0",
+        "report_on_change": false,
+        "report_rate": 1000,
+        "sample_rate": 1000,
+        "down_sample": "SUM",
+        "app_specific_config": {
+          "ip_address": "localhost",
+          "port": 5020,
+          "register_range": "HOLDING_COIL",
+          "register_offset": 0,
+          "register_count": 1,
+          "byte_endianness": "big",
+          "register_endianness": "big",
+          "evaluation_mode": "bitmask_bool",
+          "bitmask": "0x0080"
+        }
+      }
+    }
+  }
+}

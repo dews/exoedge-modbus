@@ -1,0 +1,62 @@
+{
+  "channels": {
+    "1": {
+      "display_name": "Holding Register 1",
+      "description": "One-second intervals of reading holding register 1.",
+      "properties": {
+        "max": null,
+        "precision": null,
+        "data_type": "NUMBER",
+        "min": null
+      },
+      "protocol_config": {
+        "application": "Modbus_TCP",
+        "interface": "/sys/class/net/eth0",
+        "report_on_change": false,
+        "report_rate": 1000,
+        "sample_rate": 1000,
+        "down_sample": "ACT",
+        "app_specific_config": {
+          "ip_address": "192.168.11.139",
+          "port": 5020,
+          "register_range": "HOLDING_REGISTER",
+          "register_offset": 0,
+          "register_count": 1,
+          "byte_endianness": "big",
+          "register_endianness": "big",
+          "evaluation_mode": "bitmask_int",
+          "bitmask": "0xFFFF"
+        }
+      }
+    },
+    "2": {
+      "display_name": "Holding Register 2",
+      "description": "One-second intervals of reading holding register 2, only reporting if changed.",
+      "properties": {
+        "max": null,
+        "precision": null,
+        "data_type": "NUMBER",
+        "min": null
+      },
+      "protocol_config": {
+        "application": "Modbus_TCP",
+        "interface": "/sys/class/net/eth0",
+        "report_on_change": false,
+        "report_rate": 1000,
+        "sample_rate": 1000,
+        "down_sample": "ACT",
+        "app_specific_config": {
+          "ip_address": "localhost",
+          "port": 5020,
+          "register_range": "HOLDING_REGISTER",
+          "register_offset": 1,
+          "register_count": 1,
+          "byte_endianness": "big",
+          "register_endianness": "big",
+          "evaluation_mode": "bitmask_int",
+          "bitmask": "0xFFFF"
+        }
+      }
+    }
+  }
+}
