@@ -37,75 +37,53 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                 configured_applications = self.get_configured_applications()
                 time.sleep(1.0)
 
+        iface_instance = {}
         for channel in modbus_tcp_channels.values():
-            modbus_kwargs = {
-                'ip_address': channel.protocol_config.app_specific_config['ip_address'],
-                'port': int(channel.protocol_config.app_specific_config['port'])
+            ip_address = channel.protocol_config.app_specific_config['ip_address']
+            if ip_address not in iface_instance:
+                iface_instance.update({
+                    ip_address: ExositeModbusTCP(
+                        ip_address=channel.protocol_config.app_specific_config['ip_address'],
+                        port=int(channel.protocol_config.app_specific_config['port'])
+                    )
+                })
+
+        for channel in modbus_tcp_channels.values():
+            channel.client = iface_instance.get(channel.protocol_config.app_specific_config['ip_address'])
+            channel.client.eval_kwargs = {
+                'data_address': REGISTER_NUMBER_MAP[
+                    channel.protocol_config.app_specific_config['register_range']
+                    ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
+                'register_count': int(channel.protocol_config.app_specific_config['register_count']),
+                'value': None,  # not used/implimented for read operations
+                'byte_endianness': channel.protocol_config.app_specific_config['byte_endianness'],
+                'register_endianness': channel.protocol_config.app_specific_config['register_endianness'],
+                'evaluation_mode': channel.protocol_config.app_specific_config['evaluation_mode'],
+                'bitmask': channel.protocol_config.app_specific_config['bitmask'],
             }
-            setattr(
-                channel,
-                'client',
-                # TODO: these modbus clients should be grouped
-                # together better in a map and then referenced
-                # by channels
-                ExositeModbusTCP(**modbus_kwargs)
-            )
-            setattr(
-                channel.client,
-                'eval_kwargs',
-                {
-                    'data_address': REGISTER_NUMBER_MAP[
-                        channel.protocol_config.app_specific_config['register_range']
-                        ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
-                    'register_count': int(channel.protocol_config.app_specific_config['register_count']),
-                    'value': None,  # not used/implimented for read operations
-                    'byte_endianness': channel.protocol_config.app_specific_config['byte_endianness'],
-                    'register_endianness': channel.protocol_config.app_specific_config['register_endianness'],
-                    'evaluation_mode': channel.protocol_config.app_specific_config['evaluation_mode'],
-                    'bitmask': channel.protocol_config.app_specific_config['bitmask'],
-                }
-            )
             LOG.critical("channel.client.eval_kwargs: {!r}".format(channel.client.eval_kwargs))
 
-        for channel in modbus_rtu_channels.values():
-            application_config = configured_applications.get('applications')
-            modbus_rtu_configuration = application_config.get('Modbus_RTU')
+        application_config = configured_applications.get('applications')
+        modbus_rtu_configuration = application_config.get('Modbus_RTU')
+        for iface in modbus_rtu_configuration.get("interfaces"):
+            for channel in modbus_rtu_channels.values():
+                interface = iface.get("interface")
+                if interface == channel.protocol_config.interface and interface not in iface_instance:
+                    iface_instance.update({interface: ExositeModbusRTU(**iface)})
 
-            channel_modbus_kwargs = None
-            for iface in modbus_rtu_configuration.get("interfaces"):
-                if iface.get("interface") == channel.protocol_config.interface:
-                    channel_modbus_kwargs = iface
-            if not channel_modbus_kwargs:
-                channel.put_channel_error("config_applications not configured for Modbus_RTU")
-                break
-            modbus_kwargs = {
-                'slave_id': channel.protocol_config.app_specific_config['slave_id'],
+        for channel in modbus_rtu_channels.values():
+            channel.client = iface_instance.get(channel.protocol_config.interface)
+            channel.client.eval_kwargs = {
+                'data_address': REGISTER_NUMBER_MAP[
+                    channel.protocol_config.app_specific_config['register_range']
+                    ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
+                'register_count': int(channel.protocol_config.app_specific_config['register_count']),
+                'value': None,  # not used/implimented for read operations
+                'byte_endianness': channel.protocol_config.app_specific_config['byte_endianness'],
+                'register_endianness': channel.protocol_config.app_specific_config['register_endianness'],
+                'evaluation_mode': channel.protocol_config.app_specific_config['evaluation_mode'],
+                'bitmask': channel.protocol_config.app_specific_config['bitmask'],
             }
-            modbus_kwargs.update(channel_modbus_kwargs)
-            LOG.critical("modbus_kwargs: {}".format(modbus_kwargs))
-            setattr(
-                channel,
-                'client',
-                # TODO: these modbus clients should be grouped
-                # together better in a map and then referenced
-                # by channels?
-                ExositeModbusRTU(**modbus_kwargs)
-            )
-            setattr(
-                channel.client,
-                'eval_kwargs',
-                {
-                    'data_address': REGISTER_NUMBER_MAP[
-                        channel.protocol_config.app_specific_config['register_range']
-                        ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
-                    'register_count': int(channel.protocol_config.app_specific_config['register_count']),
-                    'value': None,  # not used/implimented for read operations
-                    'byte_endianness': channel.protocol_config.app_specific_config['byte_endianness'],
-                    'register_endianness': channel.protocol_config.app_specific_config['register_endianness'],
-                    'evaluation_mode': channel.protocol_config.app_specific_config['evaluation_mode'],
-                    'bitmask': channel.protocol_config.app_specific_config['bitmask'],
-                }
-            )
             LOG.critical("channel.client.eval_kwargs: {!r}".format(channel.client.eval_kwargs))
 
         all_channels = modbus_tcp_channels
@@ -171,6 +149,7 @@ class ModbusExoEdgeSource(ExoEdgeSource):
 
             for channel in all_channels.values():
                 if channel.is_sample_time():
+                    channel.client.slave_id = channel.protocol_config.app_specific_config.get('slave_id', 1)
 
                     LOG.info("POLLING MODBUS CHANNEL: {}".format(channel.name))
                     register_range = channel.protocol_config.app_specific_config['register_range']

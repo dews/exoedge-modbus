@@ -483,7 +483,7 @@ class ExositeModbusRTU(ExositeModbus):
 
     """
     def __init__(self, **kwargs):
-        self.slave_id = kwargs.get('slave_id')
+        self.slave_id = 1
 
         self.ip = '127.0.0.1'
         self.port = kwargs.get('interface')
