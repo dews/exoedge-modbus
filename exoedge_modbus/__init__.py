@@ -19,41 +19,48 @@ from murano_client.client import WatchQueue
 from pymodbus.exceptions import ModbusException
 from pymodbus.constants import Endian
 
-LOG = logger.getLogger(__name__, level=logging.getLogger('exoedge').getEffectiveLevel())
+LOG = logger.getLogger(__name__, level=logging.getLogger(
+    'exoedge').getEffectiveLevel())
 
-REGISTER_NUMBER_TO_ADDRESS_OFFSET=-1
+REGISTER_NUMBER_TO_ADDRESS_OFFSET = -1
+
+
 class ModbusExoEdgeSource(ExoEdgeSource):
     """ Exoedge Modbus source."""
 
     def run(self):
 
-        modbus_tcp_channels = {e.name: e for e in self.get_channels_by_application("Modbus_TCP")}
-        modbus_rtu_channels = {e.name: e for e in self.get_channels_by_application("Modbus_RTU")}
+        modbus_tcp_channels = {
+            e.name: e for e in self.get_channels_by_application("Modbus_TCP")}
+        modbus_rtu_channels = {
+            e.name: e for e in self.get_channels_by_application("Modbus_RTU")}
 
         configured_applications = self.get_configured_applications()
         if modbus_rtu_channels:
             while not configured_applications:
-                LOG.critical("Resource 'config_applications' not set for RTU channels.")
+                LOG.critical(
+                    "Resource 'config_applications' not set for RTU channels.")
                 configured_applications = self.get_configured_applications()
                 time.sleep(1.0)
-
-        iface_instance = {}
+        valid_channels = []
+        iface_instances = {}
         for channel in modbus_tcp_channels.values():
             ip_address = channel.protocol_config.app_specific_config['ip_address']
-            if ip_address not in iface_instance:
-                iface_instance.update({
+            if ip_address not in iface_instances:
+                iface_instances.update({
                     ip_address: ExositeModbusTCP(
                         ip_address=channel.protocol_config.app_specific_config['ip_address'],
-                        port=int(channel.protocol_config.app_specific_config['port'])
+                        port=int(
+                            channel.protocol_config.app_specific_config['port'])
                     )
                 })
 
         for channel in modbus_tcp_channels.values():
-            channel.client = iface_instance.get(channel.protocol_config.app_specific_config['ip_address'])
-            channel.client.eval_kwargs = {
-                'data_address': REGISTER_NUMBER_MAP[
-                    channel.protocol_config.app_specific_config['register_range']
-                    ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
+            ip_address = channel.protocol_config.app_specific_config['ip_address']
+            channel.client = iface_instances.get(ip_address)
+            channel.eval_kwargs = {
+                'data_address': REGISTER_NUMBER_MAP[channel.protocol_config.app_specific_config['register_range']]['range'][0] +
+                int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
                 'register_count': int(channel.protocol_config.app_specific_config['register_count']),
                 'value': None,  # not used/implimented for read operations
                 'byte_endianness': channel.protocol_config.app_specific_config['byte_endianness'],
@@ -61,22 +68,30 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                 'evaluation_mode': channel.protocol_config.app_specific_config['evaluation_mode'],
                 'bitmask': channel.protocol_config.app_specific_config['bitmask'],
             }
-            LOG.critical("channel.client.eval_kwargs: {!r}".format(channel.client.eval_kwargs))
+            valid_channels.append(channel)
+            LOG.critical("channel.eval_kwargs: {!r}".format(
+                channel.eval_kwargs))
 
         application_config = configured_applications.get('applications')
         modbus_rtu_configuration = application_config.get('Modbus_RTU')
         for iface in modbus_rtu_configuration.get("interfaces"):
             for channel in modbus_rtu_channels.values():
                 interface = iface.get("interface")
-                if interface == channel.protocol_config.interface and interface not in iface_instance:
-                    iface_instance.update({interface: ExositeModbusRTU(**iface)})
+                if interface == channel.protocol_config.interface and interface not in iface_instances:
+                    iface_instances.update(
+                        {interface: ExositeModbusRTU(**iface)})
 
         for channel in modbus_rtu_channels.values():
-            channel.client = iface_instance.get(channel.protocol_config.interface)
-            channel.client.eval_kwargs = {
+            if channel.protocol_config.interface not in iface_instances:
+                channel.put_channel_error(
+                    "config_applications not configured for Modbus_RTU")
+                continue
+            channel.client = iface_instances.get(
+                channel.protocol_config.interface)
+            channel.eval_kwargs = {
                 'data_address': REGISTER_NUMBER_MAP[
                     channel.protocol_config.app_specific_config['register_range']
-                    ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
+                ]['range'][0] + int(channel.protocol_config.app_specific_config['register_number']) + REGISTER_NUMBER_TO_ADDRESS_OFFSET,
                 'register_count': int(channel.protocol_config.app_specific_config['register_count']),
                 'value': None,  # not used/implimented for read operations
                 'byte_endianness': channel.protocol_config.app_specific_config['byte_endianness'],
@@ -84,10 +99,9 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                 'evaluation_mode': channel.protocol_config.app_specific_config['evaluation_mode'],
                 'bitmask': channel.protocol_config.app_specific_config['bitmask'],
             }
-            LOG.critical("channel.client.eval_kwargs: {!r}".format(channel.client.eval_kwargs))
-
-        all_channels = modbus_tcp_channels
-        all_channels.update(modbus_rtu_channels)
+            valid_channels.append(channel)
+            LOG.critical("channel.eval_kwargs: {!r}".format(
+                channel.eval_kwargs))
 
         while not self.is_stopped():
 
@@ -100,7 +114,7 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                         "Processing modbus data out: {}({}): {}"
                         .format(
                             channel.name,
-                            channel.client.eval_kwargs['data_address'],
+                            channel.eval_kwargs['data_address'],
                             data_out_obj.data_out_value)
                     )
                     register_range = channel.protocol_config.app_specific_config['register_range']
@@ -108,15 +122,16 @@ class ModbusExoEdgeSource(ExoEdgeSource):
 
                     if register_range in ["INPUT_COIL", "HOLDING_COIL"]:
                         try:
-                            channel.client.eval_kwargs['value'] = data_out_obj.data_out_value
+                            channel.eval_kwargs['value'] = data_out_obj.data_out_value
                             response = channel.client.write_coil(
-                                channel.client.eval_kwargs['data_address'],
+                                channel.eval_kwargs['data_address'],
                                 data_out_obj.data_out_value
                             )
                             LOG.warning(
                                 "WRITE COIL RESPONSE: {}".format(response))
                         except ModbusException as exc:
-                            LOG.exception("INPUT_COIL Write Exception".format(format_exc=exc))
+                            LOG.exception(
+                                "INPUT_COIL Write Exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
                         except ExoEdgeModbusException as exc:
                             LOG.exception("INPUT_COIL Write EXCEPTION")
@@ -126,30 +141,33 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                             channel.put_channel_error(exc)
 
                         # cleanup
-                        channel.client.eval_kwargs['value'] = None
+                        channel.eval_kwargs['value'] = None
 
                     elif register_range in ["INPUT_REGISTER", "HOLDING_REGISTER"]:
                         try:
-                            channel.client.eval_kwargs['value'] = data_out_obj.data_out_value
+                            channel.eval_kwargs['value'] = data_out_obj.data_out_value
                             response = channel.client.write_registers(
-                                channel.client.eval_kwargs
+                                channel.eval_kwargs
                             )
                         except ModbusException as exc:
-                            LOG.exception("HOLDING_REGISTER Exception".format(format_exc=exc))
+                            LOG.exception(
+                                "HOLDING_REGISTER Exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
                         except ExoEdgeModbusException as exc:
                             LOG.exception("HOLDING_REGISTER EXCEPTION")
                             channel.put_channel_error(exc)
                         except Exception as exc:
-                            LOG.exception("HOLDING_REGISTER General exception".format(format_exc=exc))
+                            LOG.exception(
+                                "HOLDING_REGISTER General exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
 
                         # cleanup
-                        channel.client.eval_kwargs['value'] = None
+                        channel.eval_kwargs['value'] = None
 
-            for channel in all_channels.values():
+            for channel in valid_channels:
                 if channel.is_sample_time():
-                    channel.client.slave_id = channel.protocol_config.app_specific_config.get('slave_id', 1)
+                    channel.client.slave_id = channel.protocol_config.app_specific_config.get(
+                        'slave_id', 1)
 
                     LOG.info("POLLING MODBUS CHANNEL: {}".format(channel.name))
                     register_range = channel.protocol_config.app_specific_config['register_range']
@@ -158,10 +176,11 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                     if register_range == "INPUT_COIL":
                         try:
                             response = channel.client.read_discrete_inputs(
-                                channel.client.eval_kwargs
+                                channel.eval_kwargs
                             )
                         except ModbusException as exc:
-                            LOG.exception("INPUT_COIL Exception".format(format_exc=exc))
+                            LOG.exception(
+                                "INPUT_COIL Exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
                         except ExoEdgeModbusException as exc:
                             LOG.exception("INPUT_COIL EXCEPTION")
@@ -173,46 +192,52 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                     elif register_range == "HOLDING_COIL":
                         try:
                             response = channel.client.read_coils(
-                                channel.client.eval_kwargs
+                                channel.eval_kwargs
                             )
                         except ModbusException as exc:
-                            LOG.exception("HOLDING_COIL Exception".format(format_exc=exc))
+                            LOG.exception(
+                                "HOLDING_COIL Exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
                         except ExoEdgeModbusException as exc:
                             LOG.exception("HOLDING_COIL EXCEPTION")
                             channel.put_channel_error(exc)
                         except Exception as exc:
-                            LOG.exception("HOLDING_COIL General exception".format(format_exc=exc))
+                            LOG.exception(
+                                "HOLDING_COIL General exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
 
                     elif register_range == "INPUT_REGISTER":
                         try:
                             response = channel.client.read_input_registers(
-                                channel.client.eval_kwargs
+                                channel.eval_kwargs
                             )
                         except ModbusException as exc:
-                            LOG.exception("INPUT_REGISTER Exception".format(format_exc=exc))
+                            LOG.exception(
+                                "INPUT_REGISTER Exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
                         except ExoEdgeModbusException as exc:
                             LOG.exception("INPUT_REGISTER EXCEPTION")
                             channel.put_channel_error(exc)
                         except Exception as exc:
-                            LOG.exception("INPUT_REGISTER General exception".format(format_exc=exc))
+                            LOG.exception(
+                                "INPUT_REGISTER General exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
 
                     elif register_range == "HOLDING_REGISTER":
                         try:
                             response = channel.client.read_holding_registers(
-                                channel.client.eval_kwargs
+                                channel.eval_kwargs
                             )
                         except ModbusException as exc:
-                            LOG.exception("HOLDING_REGISTER Exception".format(format_exc=exc))
+                            LOG.exception(
+                                "HOLDING_REGISTER Exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
                         except ExoEdgeModbusException as exc:
                             LOG.exception("HOLDING_REGISTER EXCEPTION")
                             channel.put_channel_error(exc)
                         except Exception as exc:
-                            LOG.exception("HOLDING_REGISTER General exception".format(format_exc=exc))
+                            LOG.exception(
+                                "HOLDING_REGISTER General exception".format(format_exc=exc))
                             channel.put_channel_error(exc)
 
                     if response is not None:
@@ -222,11 +247,10 @@ class ModbusExoEdgeSource(ExoEdgeSource):
                 LOG.debug("sleeping 0.01 sec after sweeping all channels.")
                 time.sleep(0.01)
 
-        for name, channel in all_channels.items():
+        for channel in valid_channels:
             LOG.critical(
                 "Closing client: {} :: {}"
                 .format(channel, dir(channel.client))
             )
             channel.client.client.close()
         LOG.critical("{} HAS BEEN STOPPED.".format(self.name))
-
